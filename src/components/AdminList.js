@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Input, Select, Space, Table} from "antd";
+import React, { useEffect, useState } from "react";
+import { Col, Input, Row, Select, Space, Table } from "antd";
 import axios from "../config/axios";
 
-const {Search} = Input
-const {Option} = Select
+const { Search } = Input
+const { Option } = Select
 
 const columns = [
   {
@@ -45,10 +45,10 @@ const columns = [
     title: 'action',
     key: 'action',
     render: (_, record) => (
-        <Space size="middle">
-          <a>Edit</a>
-          <a>Delete</a>
-        </Space>
+      <Space size="middle">
+        <a>Edit</a>
+        <a>Delete</a>
+      </Space>
     ),
   },
 ];
@@ -70,27 +70,35 @@ export function AdminList(props) {
   }
 
   const selectBefore = (
-      <Select onChange={e => setBy(e)} defaultValue="Username" className="select-before">
-        <Option value="Username">Username</Option>
-        <Option value="Firstname">Firstname</Option>
-        <Option value="Lastname">Lastname</Option>
-        <Option value="Phone">Phone</Option>
-        <Option value="Email">Email</Option>
-      </Select>
+    <Select onChange={e => setBy(e)} defaultValue="Username" className="select-before">
+      <Option value="Username">Username</Option>
+      <Option value="Firstname">Firstname</Option>
+      <Option value="Lastname">Lastname</Option>
+      <Option value="Phone">Phone</Option>
+      <Option value="Email">Email</Option>
+    </Select>
   );
 
   return (
-      <div>
-        <Search
+    <>
+      <Row justify="center">
+        <Col span={23}>
+          <Search
             addonBefore={selectBefore}
             placeholder="input search text"
             allowClear
             enterButton="Search"
             size="large"
             onSearch={onSearch}
-        />
-        <Table rowKey="No" columns={columns} dataSource={data}/>
-      </div>
+          />
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col span={23}>
+          <Table rowKey="No" columns={columns} dataSource={data} />
+        </Col>
+      </Row>
+    </>
   )
 }
 

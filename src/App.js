@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import {Layout} from 'antd';
+import { Layout } from 'antd';
 import {
   MailOutlined,
   AppstoreOutlined,
@@ -9,8 +9,8 @@ import {
   LogoutOutlined,
   UnorderedListOutlined, UserOutlined
 } from '@ant-design/icons';
-import {Menu} from 'antd';
-import {useEffect, useState} from "react";
+import { Menu } from 'antd';
+import { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -22,7 +22,7 @@ import AdminList from "./components/AdminList";
 import SongList from "./components/SongList";
 import NotFound from "./components/NotFound";
 
-const {Header, Footer, Content} = Layout;
+const { Header, Footer, Content } = Layout;
 
 function App() {
   const [currentMenu, setCurrentMenu] = useState("");
@@ -40,6 +40,9 @@ function App() {
     if (e.key === "logout") {
       setIsLogin(false);
       localStorage.clear();
+    } else if (e.key === "login") {
+      setCurrentMenu(e.key);
+      navigate("/")
     } else {
       setCurrentMenu(e.key);
       navigate("/" + e.key)
@@ -47,34 +50,34 @@ function App() {
   }
 
   return (
-      <Layout>
-        <Header>
-          <Menu onSelect={onSelect} mode="horizontal" defaultSelectedKeys={['login']}>
-            {!isLogin ? <Menu.Item key="login" icon={<LoginOutlined/>}>
-              Login
-            </Menu.Item> : null}
-            {isLogin ? <Menu.Item key="admin-list" icon={<UserOutlined/>}>
-              Admin list
-            </Menu.Item> : null}
-            {isLogin ? <Menu.Item key="song-list" icon={<UnorderedListOutlined/>}>
-              Song List
-            </Menu.Item> : null}
-            {isLogin ? <Menu.Item key="logout" icon={<LogoutOutlined/>}>
-              Logout
-            </Menu.Item> : null}
-          </Menu>
-        </Header>
-        <Content>
-          <Routes>
-            {isLogin ? null : <Route path="/login" element={<Login isLogin={isLogin} setIsLogin={setIsLogin}/>}/>}
-            {isLogin ?
-                [<Route key="1" path="/admin-list" element={<AdminList isLogin={isLogin} setIsLogin={setIsLogin}/>}/>,
-                  <Route key="2" path="/song-list" element={<SongList isLogin={isLogin} setIsLogin={setIsLogin}/>}/>,
-                ] : null}
-            <Route path="/*" element={<NotFound/>}/>
-          </Routes>
-        </Content>
-      </Layout>
+    <Layout>
+      <Header>
+        <Menu onSelect={onSelect} mode="horizontal" defaultSelectedKeys={['login']}>
+          {!isLogin ? <Menu.Item key="login" icon={<LoginOutlined />}>
+            Login
+          </Menu.Item> : null}
+          {isLogin ? <Menu.Item key="admin-list" icon={<UserOutlined />}>
+            Admin list
+          </Menu.Item> : null}
+          {isLogin ? <Menu.Item key="song-list" icon={<UnorderedListOutlined />}>
+            Song List
+          </Menu.Item> : null}
+          {isLogin ? <Menu.Item key="logout" icon={<LogoutOutlined />}>
+            Logout
+          </Menu.Item> : null}
+        </Menu>
+      </Header>
+      <Content>
+        <Routes>
+          {isLogin ? null : <Route path="/" element={<Login isLogin={isLogin} setIsLogin={setIsLogin} />} />}
+          {isLogin ?
+            [<Route key="1" path="/admin-list" element={<AdminList isLogin={isLogin} setIsLogin={setIsLogin} />} />,
+            <Route key="2" path="/song-list" element={<SongList isLogin={isLogin} setIsLogin={setIsLogin} />} />,
+            ] : null}
+          <Route path="/*" element={<NotFound />} />
+        </Routes>
+      </Content>
+    </Layout>
   );
 }
 
