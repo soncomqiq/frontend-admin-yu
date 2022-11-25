@@ -39,6 +39,7 @@ function App() {
   const onSelect = (e) => {
     if (e.key === "logout") {
       setIsLogin(false);
+      navigate("/")
       localStorage.clear();
     } else if (e.key === "login") {
       setCurrentMenu(e.key);
@@ -67,6 +68,9 @@ function App() {
           </Menu.Item> : null}
         </Menu>
       </Header>
+      <br/>
+      <br/>
+      <br/>
       <Content>
         <Routes>
           {isLogin ? null : <Route path="/" element={<Login isLogin={isLogin} setIsLogin={setIsLogin} />} />}
