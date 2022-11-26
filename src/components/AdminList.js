@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Input, Modal, Row, Select, Space, Table} from "antd";
+import {Button, Col, Form, Input, Modal, notification, Row, Select, Space, Table} from "antd";
 import axios from "../config/axios";
 
 const {Search} = Input
 const {Option} = Select
 
 export function AdminList(props) {
+  const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [by, setBy] = useState("Username")
   const [open, setOpen] = useState(false);
   const [curAdmin, setCurAdmin] = useState({})
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreation, setIsCreation] = useState(false);
 
   const columns = [
     {
@@ -52,14 +55,54 @@ export function AdminList(props) {
       key: 'action',
       render: (_, record) => (
           <Space size="middle">
-            <a>Edit</a>
-            <a onClick={() => showModal(record)}>Delete</a>
+            <a onClick={() => showEditModal(record)}>Edit</a>
+            <a onClick={() => showDeleteModal(record)}>Delete</a>
           </Space>
       ),
     },
   ];
 
-  const showModal = (record) => {
+  const showEditModal = (admin) => {
+    setIsModalOpen(true);
+    form.setFieldsValue({...admin})
+    setIsCreation(false)
+  };
+
+  const showCreateModal = () => {
+    setIsCreation(true)
+    setIsModalOpen(true);
+    form.resetFields();
+  }
+
+  const handleEditOrCreateOk = () => {
+    setIsModalOpen(false);
+    form.submit();
+  };
+
+  const submitEdit = (values) => {
+    console.log(values)
+    if (isCreation) {
+      axios.post("/admins", values)
+          .then(res => {
+            notification.success({
+              message: "Admin is created"
+            })
+            fetchData();
+          })
+          .catch(err => {
+            notification.error({
+              message: `Username: ${values.Username} is not available`
+            })
+          })
+    } else {
+      axios.put("/admins/" + values.Username, values)
+          .then(res => {
+            fetchData();
+          })
+    }
+  }
+
+  const showDeleteModal = (record) => {
     setOpen(true);
     setCurAdmin(record)
     console.log(record)
@@ -100,8 +143,44 @@ export function AdminList(props) {
 
   return (
       <>
+        <Modal title={isCreation ? "Create New Admin" : "Edit Admin"} open={isModalOpen} onOk={handleEditOrCreateOk}
+               onCancel={() => setIsModalOpen(false)}>
+          <Form
+              onFinish={submitEdit}
+              form={form}
+              labelCol={{
+                span: 7,
+              }}
+              wrapperCol={{
+                span: 14,
+              }}
+              layout="horizontal"
+          >
+            <Form.Item name="No" label="No" rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Username" label="Username" rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Firstname" label="Firstname" rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Lastname" label="Lastname" rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Phone" label="Phone" rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Email" label="Email" rules={[{required: true}, {type: 'email'}]}>
+              <Input/>
+            </Form.Item>
+            <Form.Item name="Password" label="Password" rules={[{required: true}]}>
+              <Input type="password"/>
+            </Form.Item>
+          </Form>
+        </Modal>
         <Modal
-            title="Modal"
+            title="Delete"
             open={open}
             onOk={onOk}
             onCancel={() => setOpen(false)}
@@ -130,7 +209,7 @@ export function AdminList(props) {
         <Row justify="center">
           <Col span={23}>
             <Row justify="end">
-              <Button>Add new admin</Button>
+              <Button onClick={showCreateModal}>Add new admin</Button>
             </Row>
           </Col>
         </Row>
