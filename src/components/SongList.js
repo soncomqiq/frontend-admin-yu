@@ -168,7 +168,7 @@ export function SongList(props) {
             <Form.Item name="Type" label="Type" rules={[{required: true}]}>
               <Input/>
             </Form.Item>
-            <Form.Item name="CoverUrl" label="CoverUrl" rules={[{required: true}]}>
+            <Form.Item name="LinkPicture" label="LinkPicture" rules={[{required: true}]}>
               <Input/>
             </Form.Item>
           </Form>
